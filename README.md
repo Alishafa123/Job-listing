@@ -1,4 +1,7 @@
 
+## Video Link (Loom)
+https://www.loom.com/share/e976ceeeea14463693d69f4810f681b9?sid=22e9e435-b6a7-4394-aa0d-90d724f87425
+
 ## Frontend Setup (React)
 
 ```bash
