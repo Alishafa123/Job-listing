@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-// import './JobForm.css';
 
-function JobForm({ onSubmit }) {
+import React, { useState, useEffect } from 'react';
+
+function JobForm({ onSubmit, initialData }) {
   const [formData, setFormData] = useState({
     title: '',
     company: '',
@@ -10,11 +10,19 @@ function JobForm({ onSubmit }) {
     tags: '',
   });
 
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        ...initialData,
+        tags: Array.isArray(initialData.tags)
+          ? initialData.tags.join(', ')
+          : initialData.tags || '',
+      });
+    }
+  }, [initialData]);
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -24,7 +32,6 @@ function JobForm({ onSubmit }) {
       tags: formData.tags.split(',').map((tag) => tag.trim()),
     };
     onSubmit(job);
-    setFormData({ title: '', company: '', location: '', job_type: 'Full-Time', tags: '' });
   };
 
   return (
@@ -38,7 +45,7 @@ function JobForm({ onSubmit }) {
         <option>Internship</option>
       </select>
       <input name="tags" placeholder="Tags (comma separated)" value={formData.tags} onChange={handleChange} />
-      <button type="submit">➕ Add Job</button>
+      <button type="submit">{initialData ? 'Update' : '➕ Add'} Job</button>
     </form>
   );
 }
