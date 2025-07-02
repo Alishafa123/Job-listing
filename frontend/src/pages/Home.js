@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { getJobs, deleteJob } from '../services/api';
+import { getJobs, deleteJob, updateJob } from '../services/api';
 import JobCard from '../components/JobCard';
-// import './Home.css';
+import FilterBar from '../components/FilterBar';
 
 function Home() {
   const [jobs, setJobs] = useState([]);
+  const [filters, setFilters] = useState({ search: '', job_type: '', location: '', sort: 'desc' });
 
   useEffect(() => {
     fetchJobs();
-  }, []);
+  }, [filters]);
 
   const fetchJobs = async () => {
     try {
-      const res = await getJobs();
+      const params = {
+        search: filters.search,
+        job_type: filters.job_type,
+        location: filters.location,
+        sort: filters.sort,
+      };
+      const res = await getJobs(params);
       setJobs(res.data);
     } catch (error) {
       console.error('Failed to fetch jobs:', error);
@@ -29,6 +36,7 @@ function Home() {
   return (
     <div className="home-container">
       <h2>📋 All Jobs</h2>
+      <FilterBar filters={filters} setFilters={setFilters} />
       <div className="job-list">
         {jobs.map((job) => (
           <JobCard key={job.id} job={job} onDelete={handleDelete} />
